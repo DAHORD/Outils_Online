@@ -24,7 +24,6 @@ body {
   min-height: 100vh;
 }
 
-/* Layout global */
 .page-wrapper {
   display: flex;
   justify-content: center;
@@ -35,7 +34,6 @@ body {
   max-width: 1200px;
 }
 
-/* Contenu principal */
 main {
   display: flex;
   flex-direction: column;
@@ -44,7 +42,6 @@ main {
   width: 100%;
 }
 
-/* Horloge */
 .clock {
   font-family: "Orbitron", sans-serif;
   margin-bottom: 60px;
@@ -65,7 +62,6 @@ main {
   max-width: 420px;
 }
 
-/* Calendrier */
 .calendar-container {
   background-color: #2c2c2c;
   padding: 20px;
@@ -80,7 +76,7 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  position: relative; /* pour dropdowns */
+  position: relative; 
 }
 
 .calendar-header h1 {
@@ -209,7 +205,6 @@ button .material-symbols-outlined {
   font-size: 25px;
 }
 
-/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -312,7 +307,6 @@ button .material-symbols-outlined {
   margin-right: 8px;
 }
 
-/* OUTILS (Timer / Chrono) */
 aside {
   background-color: #2c2c2c;
   padding: 20px;
@@ -387,7 +381,6 @@ aside {
   background-color: #666;
 }
 
-/* Timer */
 .timer input {
   background-color: #505050;
   width: 100%;

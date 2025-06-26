@@ -216,9 +216,8 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ---------------------
+
 // CHRONOMÈTRE
-// ---------------------
 let stopwatchInterval;
 let elapsed = 0;
 let isRunning = false;
@@ -261,9 +260,7 @@ function resetStopwatch() {
   updateDisplay();
 }
 
-// ---------------------
 // MINUTEUR
-// ---------------------
 let timerInterval;
 let timerRemaining = 0;
 
@@ -298,9 +295,7 @@ function resetTimer() {
   updateTimerDisplay();
 }
 
-// ---------------------
 // SÉLECTEUR D’OUTIL
-// ---------------------
 function toggleToolsMenu() {
   const options = document.getElementById('toolsOptions');
   const isVisible = options.style.display === 'flex';
