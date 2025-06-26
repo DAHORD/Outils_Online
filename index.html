@@ -3,60 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Calendrier</title>
+  <title>Calendrier avec Outils</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="calendar-container">
-    <header>
-      <button id="prev"><span class="material-symbols-outlined">
-        chevron_left
-        </span></button>
-      <h1>
-        <span id="month" class="selectable"></span>
-        <span id="year" class="selectable"></span>
-      </h1>
-      <div class="dropdown" id="monthDropdown"></div>
-      <div class="dropdown" id="yearDropdown"></div>
-      <button id="next"><span class="material-symbols-outlined">
-        chevron_right
-        </span></button>
-    </header>
-    <ul class="weekdays">
-      <li>Lu</li><li>Ma</li><li>Me</li><li>Je</li><li>Ve</li><li>Sa</li><li>Di</li>
-    </ul>
-    <ul class="days" id="calendar-days"></ul>
-    <div class="buttons">
-      <button id="exportBtn"><span class="material-symbols-outlined">
-        download
-        </span>Exporter</button>
-      <input type="file" id="importInput" accept=".json" hidden />
-      <button id="importBtn"><span class="material-symbols-outlined">
-        upload
-        </span>Importer</button>
-    </div>
-    <div class="clock" id="clock"></div>
+
+<div class="theme-switch-wrapper">
+  <label class="theme-switch">
+    <input type="checkbox" id="themeToggle" />
+    <span class="slider">
+      <span class="icon">
+        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="display: none;">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </span>
+    </span>
+  </label>
+</div>
+
+
+  <div class="page-wrapper">
+    <!-- Colonne principale -->
+    <main class="main-container">
+      <!-- Horloge -->
+      <div class="clock" id="clock"></div>
+
+      <!-- Calendrier -->
+      <section class="calendar-container">
+        <div class="calendar-header">
+          <button id="prev"><span class="material-symbols-outlined">chevron_left</span></button>
+          <h1>
+            <span id="month" class="selectable"></span>
+            <span id="year" class="selectable"></span>
+          </h1>
+          <button id="next"><span class="material-symbols-outlined">chevron_right</span></button>
+          <div class="dropdown" id="monthDropdown"></div>
+          <div class="dropdown" id="yearDropdown"></div>
+        </div>
+
+        <ul class="weekdays">
+          <li>Lu</li><li>Ma</li><li>Me</li><li>Je</li><li>Ve</li><li>Sa</li><li>Di</li>
+        </ul>
+        <ul class="days" id="calendar-days"></ul>
+        <div class="buttons">
+          <button id="exportBtn"><span class="material-symbols-outlined">download</span>Exporter</button>
+          <input type="file" id="importInput" accept=".json" hidden />
+          <button id="importBtn"><span class="material-symbols-outlined">upload</span>Importer</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Panneau d'outils -->
+    <aside class="tools-panel">
+      <button id="toolsToggleBtn" onclick="toggleToolsMenu()">Choisir un outil</button>
+      <div class="tools-options" id="toolsOptions">
+        <button onclick="showTool('stopwatch')">Chronomètre</button>
+        <button onclick="showTool('timer')">Minuteur</button>
+        <button onclick="hideAllTools()">Aucun outil</button>
+      </div>
+
+      <!-- CHRONOMÈTRE -->
+      <section class="tool-section stopwatch" style="display: none;">
+        <h2>Chronomètre</h2>
+        <div id="display">00:00:00</div>
+        <div class="stopwatch-buttons">
+          <button onclick="startStopwatch()">Démarrer</button>
+          <button onclick="pauseStopwatch()" id="pauseBtn">Pause</button>
+          <button onclick="resetStopwatch()">Réinitialiser</button>
+        </div>
+      </section>
+
+      <!-- MINUTEUR -->
+      <section class="tool-section timer" style="display: none;">
+        <h2>Minuteur</h2>
+        <input type="number" id="timerInput" placeholder="Secondes" min="1">
+        <div id="timerDisplay">00:00</div>
+        <div class="timer-buttons">
+          <button onclick="startTimer()">Démarrer</button>
+          <button onclick="resetTimer()">Réinitialiser</button>
+        </div>
+      </section>
+    </aside>
   </div>
 
+  <!-- Modal de note -->
   <div class="modal" id="noteModal">
     <div class="modal-content">
       <textarea id="noteInput" placeholder="Écris ta note ici..."></textarea>
       <div class="modal-buttons">
-        <button id="saveNote"><span class="material-symbols-outlined">
-            save
-            </span>Enregistrer</button>
-        <button id="deleteNote"><span class="material-symbols-outlined">
-            delete_forever
-            </span>Supprimer</button>
-        <button id="closeModal"><span class="material-symbols-outlined">
-            cancel
-            </span>Fermer</button>
+        <button id="saveNote"><span class="material-symbols-outlined">save</span>Enregistrer</button>
+        <button id="deleteNote"><span class="material-symbols-outlined">delete_forever</span>Supprimer</button>
+        <button id="closeModal"><span class="material-symbols-outlined">cancel</span>Fermer</button>
       </div>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
-
 </html>

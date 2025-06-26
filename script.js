@@ -13,6 +13,7 @@ const closeModal = document.getElementById("closeModal");
 const exportBtn = document.getElementById("exportBtn");
 const importBtn = document.getElementById("importBtn");
 const importInput = document.getElementById("importInput");
+const alarmSound = new Audio("timer_alarm.wav");
 
 const months = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -206,17 +207,161 @@ importInput.onchange = (e) => {
 
 renderCalendar(currentMonth, currentYear);
 
-document.addEventListener("DOMContentLoaded", () => {
-  function updateClock() {
-    const clock = document.getElementById("clock");
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    clock.textContent = `${hours}:${minutes}:${seconds}`;
+// HORLOGE EN TEMPS RÉEL
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('fr-FR');
+  document.getElementById('clock').textContent = time;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ---------------------
+// CHRONOMÈTRE
+// ---------------------
+let stopwatchInterval;
+let elapsed = 0;
+let isRunning = false;
+
+function updateDisplay() {
+  const display = document.getElementById('display');
+  const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+  const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+  const seconds = String(elapsed % 60).padStart(2, '0');
+  display.textContent = `${hours}:${minutes}:${seconds}`;
+}
+
+function startStopwatch() {
+  if (isRunning) return;
+  isRunning = true;
+  stopwatchInterval = setInterval(() => {
+    elapsed++;
+    updateDisplay();
+  }, 1000);
+}
+
+function pauseStopwatch() {
+  const pauseBtn = document.getElementById('pauseBtn');
+  if (isRunning) {
+    clearInterval(stopwatchInterval);
+    isRunning = false;
+    pauseBtn.textContent = "Reprendre";
+  } else {
+    startStopwatch();
+    pauseBtn.textContent = "Pause";
+  }
+}
+
+function resetStopwatch() {
+  clearInterval(stopwatchInterval);
+  stopwatchInterval = null;
+  elapsed = 0;
+  isRunning = false;
+  document.getElementById('pauseBtn').textContent = "Pause";
+  updateDisplay();
+}
+
+// ---------------------
+// MINUTEUR
+// ---------------------
+let timerInterval;
+let timerRemaining = 0;
+
+function updateTimerDisplay() {
+  const minutes = String(Math.floor(timerRemaining / 60)).padStart(2, '0');
+  const seconds = String(timerRemaining % 60).padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = `${minutes}:${seconds}`;
+}
+
+function startTimer() {
+  const input = document.getElementById('timerInput');
+  timerRemaining = parseInt(input.value, 10);
+  if (isNaN(timerRemaining) || timerRemaining <= 0) return;
+
+  updateTimerDisplay();
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timerRemaining--;
+    updateTimerDisplay();
+
+    if (timerRemaining <= 0) {
+      clearInterval(timerInterval);
+      alarmSound.play();
+    }
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRemaining = 0;
+  updateTimerDisplay();
+}
+
+// ---------------------
+// SÉLECTEUR D’OUTIL
+// ---------------------
+function toggleToolsMenu() {
+  const options = document.getElementById('toolsOptions');
+  const isVisible = options.style.display === 'flex';
+
+  // Cacher les outils si on ouvre le menu
+  if (!isVisible) {
+    document.querySelectorAll('.tool-section').forEach(tool => {
+      tool.style.display = 'none';
+    });
   }
 
-  setInterval(updateClock, 1000);
-  updateClock(); // affichage immédiat
-});
+  options.style.display = isVisible ? 'none' : 'flex';
+}
 
+function showTool(toolName) {
+  document.querySelectorAll('.tool-section').forEach(tool => {
+    tool.style.display = 'none';
+  });
+
+  const selected = document.querySelector(`.${toolName}`);
+  if (selected) {
+    selected.style.display = 'block';
+  }
+
+  document.getElementById('toolsOptions').style.display = 'none';
+  document.getElementById('toolsToggleBtn').textContent = "Changer d'outil";
+}
+
+function hideAllTools() {
+  document.querySelectorAll('.tool-section').forEach(tool => {
+    tool.style.display = 'none';
+  });
+
+  document.getElementById('toolsOptions').style.display = 'none';
+  document.getElementById('toolsToggleBtn').textContent = "Choisir un outil";
+}
+
+const themeToggle = document.getElementById('themeToggle');
+const sunIcon = document.getElementById('sunIcon');
+const moonIcon = document.getElementById('moonIcon');
+
+// Initialiser selon le thème sauvegardé
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
+  document.body.classList.add('light');
+  themeToggle.checked = true;
+  sunIcon.style.display = 'block';
+  moonIcon.style.display = 'none';
+}
+
+themeToggle.addEventListener('change', () => {
+  const isLight = themeToggle.checked;
+  document.body.classList.toggle('light', isLight);
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+  // Afficher/masquer les icônes
+  if (isLight) {
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+  } else {
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+  }
+});
