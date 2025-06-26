@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendrier</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
+</head>
+<body>
+  <div class="calendar-container">
+    <header>
+      <button id="prev"><span class="material-symbols-outlined">
+        chevron_left
+        </span></button>
+      <h1>
+        <span id="month" class="selectable"></span>
+        <span id="year" class="selectable"></span>
+      </h1>
+      <div class="dropdown" id="monthDropdown"></div>
+      <div class="dropdown" id="yearDropdown"></div>
+      <button id="next"><span class="material-symbols-outlined">
+        chevron_right
+        </span></button>
+    </header>
+    <ul class="weekdays">
+      <li>Lu</li><li>Ma</li><li>Me</li><li>Je</li><li>Ve</li><li>Sa</li><li>Di</li>
+    </ul>
+    <ul class="days" id="calendar-days"></ul>
+    <div class="buttons">
+      <button id="exportBtn"><span class="material-symbols-outlined">
+        download
+        </span>Exporter</button>
+      <input type="file" id="importInput" accept=".json" hidden />
+      <button id="importBtn"><span class="material-symbols-outlined">
+        upload
+        </span>Importer</button>
+    </div>
+    <div class="clock" id="clock"></div>
+  </div>
+
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <textarea id="noteInput" placeholder="Écris ta note ici..."></textarea>
+      <div class="modal-buttons">
+        <button id="saveNote"><span class="material-symbols-outlined">
+            save
+            </span>Enregistrer</button>
+        <button id="deleteNote"><span class="material-symbols-outlined">
+            delete_forever
+            </span>Supprimer</button>
+        <button id="closeModal"><span class="material-symbols-outlined">
+            cancel
+            </span>Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
